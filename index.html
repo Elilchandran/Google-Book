@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Books 2023</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div class="container mt-3">
+            <h1 class="mb-3">Free ebook In Google Books</h1>
+            <div class="row" id='books-container'></div>
+        </div>
+        <script>
+          //setting API and Search link
+            const apiKey="AIzaSyBq6XF2g7Wys_7_RCgSyTAwq0gfcLqGmU0";
+            const searchLink="free-ebooks";
+
+      //fetching the API keys with promise
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchLink}orderBy=newest&projection=full&printType=books&maxResults=30&${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            //Through loop creating cards for each book
+            const bookContainer = document.getElementById('books-container');
+            data.items.forEach(book => {
+            const { title, authors, publisher, publishedDate, description, imageLinks } = book.volumeInfo;
+            const bookTitle = title;                    
+            const bookAuthor = authors ? authors[0] : "unknownAuthor";
+            const publishers = publisher ? publisher: "unknownPublisher";
+            const publisherDate = publishedDate ? publishedDate: "unknownDate";
+            const descriptions = description ? description : "unknownDescription";
+            const image = imageLinks ? imageLinks.thumbnail: 'https://via.placeholder.com/150x200.png?text=No+Cover+Image';
+
+            //creating Elements in div
+            const bookcard = document.createElement('div');
+            bookcard.classList.add('col-lg-4', 'col-md-6', 'mb-4');
+            bookcard.innerHTML = `
+                <div class="card h-100">
+                <img src="${image}" class="card-img-top" alt="${title}">
+                <div class="card-body">
+                    <h5 class="card-title">${bookTitle}</h5>
+                    <p class="card-text">Author: ${bookAuthor}</p>
+                    <p class="card-text">Publisher: ${publishers}</p>
+                    <p class="card-text">Published Date: ${publisherDate}</p>
+                    <p class="card-text">${descriptions}</p>
+                </div>
+                </div>
+            `;
+            //Adding the card to container
+            bookContainer.appendChild(bookcard);
+            });
+        });
+
+
+        </script>
+    </body>
+
+</html>
